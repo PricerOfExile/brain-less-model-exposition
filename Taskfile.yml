@@ -1,0 +1,7 @@
+version: '3'
+
+tasks:
+  docker:
+    cmds:
+      - docker build . -t "leddzip/pytorch-generic-model:0.1.0"
+    silent: true

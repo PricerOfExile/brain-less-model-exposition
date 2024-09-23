@@ -1,0 +1,10 @@
+### POST request to example server
+POST http://0.0.0.0:8000/predict
+Content-Type: application/json
+
+{
+  "key1": "value1",
+  "key2": "value2"
+}
+
+###

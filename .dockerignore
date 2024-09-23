@@ -1,0 +1,9 @@
+.idea/*
+.venv/*
+tests/*
+.dockerignore
+Dockerfile
+requirements.txt
+Taskfile.yml
+transfomer.py
+test.http
