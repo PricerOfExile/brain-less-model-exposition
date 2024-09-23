@@ -1,4 +1,6 @@
 import importlib.util
+import os.path
+
 import torch
 
 from fastapi import FastAPI, Request
@@ -11,22 +13,33 @@ app = FastAPI()
 model = None
 transofm_json_input_to_list = None
 
-# @app.on_event("startup")
+@app.on_event("startup")
 def load_model():
     global model, transofm_json_input_to_list
 
-    with open('model_architecture.json', 'r') as f:
-        model_config = NNCOnfig.from_json(json.load(f))
+    model_architecture_path = 'model_architecture.json'
+    if os.path.exists(model_architecture_path):
+        with open(model_architecture_path, 'r') as f:
+            model_config = NNCOnfig.from_json(json.load(f))
+    else:
+        print(f"Model architecture file not found at {model_architecture_path}")
 
-    model = ConfigurableNN(model_config)
-    model.load_state_dict(torch.load('model.pth'))
-    model.eval()
+    model_path = 'model.pth'
+    if os.path.exists(model_path):
+        model = ConfigurableNN(model_config)
+        model.load_state_dict(torch.load(model_path))
+        model.eval()
+    else:
+        print(f"Model file not found at {model_path}")
 
     transfomer_path = 'transformer.py'
-    spec = importlib.util.spec_from_file_location("transformer", transfomer_path)
-    transfomer_module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(transfomer_module)
-    transfomer_json_input_to_list = transfomer_module.transform
+    if os.path.exists(transfomer_path):
+        spec = importlib.util.spec_from_file_location("transformer", transfomer_path)
+        transfomer_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(transfomer_module)
+        transfomer_json_input_to_list = transfomer_module.transform
+    else:
+        print(f"Transformer file not found at {transfomer_path}")
 
 
 @app.post("/predict")
