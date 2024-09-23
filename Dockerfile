@@ -6,7 +6,8 @@ RUN pip install poetry
 
 COPY . /app
 
-RUN poetry install --no-interaction --no-ansi
+RUN poetry config virtualenvs.in-project true && poetry install --no-interaction --no-ansi
+
 
 EXPOSE 8000
 
