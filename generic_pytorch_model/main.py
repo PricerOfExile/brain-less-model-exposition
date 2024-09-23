@@ -45,6 +45,8 @@ def load_model():
 
 @app.post("/predict")
 async def predict(request: Request):
+    global model, transofm_json_input_to_list
+
     data = await request.json()
     result = None
 
