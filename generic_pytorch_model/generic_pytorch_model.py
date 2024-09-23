@@ -6,53 +6,52 @@ import torch.nn as nn
 
 
 def from_config_to_callable(activation_name: str) -> Callable:
-    match activation_name:
-        case 'LeakyReLu':
-            return nn.LeakyReLU
-        case 'Tanh':
-            return nn.Tanh
-        case 'ReLu':
-            return nn.ReLU
-        case 'Swish':
-            return Swish
-        case 'Sigmoid':
-            return nn.Sigmoid
-        case 'ELU':
-            return nn.ELU
-        case 'Hardshrink':
-            return nn.Hardshrink
-        case 'Hardsigmoid':
-            return nn.Hardsigmoid
-        case 'Hardswish':
-            return nn.Hardswish
-        case 'LogSigmoid':
-            return nn.LogSigmoid
-        case 'PReLU':
-            return nn.PReLU
-        case 'ReLU6':
-            return nn.ReLU6
-        case 'SELU':
-            return nn.SELU
-        case 'CELU':
-            return nn.CELU
-        case 'GELU':
-            return nn.GELU
-        case 'SiLU':
-            return nn.SiLU
-        case 'Mish':
-            return nn.Mish
-        case 'Softplus':
-            return nn.Softplus
-        case 'Softshrink':
-            return nn.Softshrink
-        case 'Softsign':
-            return nn.Softsign
-        case 'Tanhshrink':
-            return nn.Tanhshrink
-        case 'GLU':
-            return nn.GLU
-        case _:
-            raise ValueError(f'Activation {activation_name} not supported')
+    if activation_name == 'LeakyReLU':
+        return nn.LeakyReLU
+    elif activation_name == 'Tanh':
+        return nn.Tanh
+    elif activation_name == 'ReLU':
+        return nn.ReLU
+    elif activation_name == 'Swish':
+        return Swish
+    elif activation_name == 'Sigmoid':
+        return nn.Sigmoid
+    elif activation_name == 'ELU':
+        return nn.ELU
+    elif activation_name == 'Hardshrink':
+        return nn.Hardshrink
+    elif activation_name == 'Hardsigmoid':
+        return nn.Hardsigmoid
+    elif activation_name == 'Hardswish':
+        return nn.Hardswish
+    elif activation_name == 'LogSigmoid':
+        return nn.LogSigmoid
+    elif activation_name == 'PReLU':
+        return nn.PReLU
+    elif activation_name == 'ReLU6':
+        return nn.ReLU6
+    elif activation_name == 'SELU':
+        return nn.SELU
+    elif activation_name == 'CELU':
+        return nn.CELU
+    elif activation_name == 'GELU':
+        return nn.GELU
+    elif activation_name == 'SiLU':
+        return nn.SiLU
+    elif activation_name == 'Mish':
+        return nn.Mish
+    elif activation_name == 'Softplus':
+        return nn.Softplus
+    elif activation_name == 'Softshrink':
+        return nn.Softshrink
+    elif activation_name == 'Softsign':
+        return nn.Softsign
+    elif activation_name == 'Tanhshrink':
+        return nn.Tanhshrink
+    elif activation_name == 'GLU':
+        return nn.GLU
+    else:
+        raise ValueError(f'Activation {activation_name} not supported')
 
 @dataclass
 class NNLayerConfig:
@@ -61,7 +60,7 @@ class NNLayerConfig:
     activation: Callable
 
     @classmethod
-    def from_config(cls):
+    def from_config(cls, config):
         return cls(
             in_size=config['in_size'],
             out_size=config['out_size'],
