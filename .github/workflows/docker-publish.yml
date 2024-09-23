@@ -30,9 +30,11 @@ jobs:
         run: |
           IMAGE_NAME=leddzip/pytorch-generic-model
           TOKEN=$(echo -n "${{ secrets.DOCKER_USERNAME }}:${{ secrets.DOCKER_SECRET }}" | base64)
-          CURRENT_VERSION=$(curl -s -H "Authorization: Basic $TOKEN" "https://hub.docker.com/v2/repositories/$IMAGE_NAME/tags/latest" | jq -r '.name')
-          if [[ "$CURRENT_VERSION" == "null" ]]; then
+          TAGS=$(curl -s -H "Authorization: Basic $TOKEN" "https://hub.docker.com/v2/repositories/$IMAGE_NAME/tags?page_size=100" | jq -r '.results[].name' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V)
+          if [ -z "$TAGS" ]; then
             CURRENT_VERSION="0.0.0"
+          else
+            CURRENT_VERSION=$(echo "$TAGS" | tail -n 1)
           fi
           echo "Current version: $CURRENT_VERSION"
           IFS='.' read -r -a VERSION_PARTS <<< "$CURRENT_VERSION"
