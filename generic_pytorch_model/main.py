@@ -48,15 +48,21 @@ async def predict(request: Request):
     data = await request.json()
     result = None
 
+    input_tensor = None
+    output = None
+
     if transofm_json_input_to_list is not None:
         input_list = transfomer_json_input_to_list(data)
         input_tensor = torch.tensor(input_list, dtype=torch.float32)
+    else:
+        print("Transformer function not loaded yet")
 
     if model is not None:
         with torch.no_grad():
             output = model(input_tensor)
-
-        result = output.numpy().tolist()
+            result = output.numpy().tolist()
+    else:
+        print("Model not loaded yet")
 
     return {"prediction": result if result is not None else "Model not loaded yet"}
 
