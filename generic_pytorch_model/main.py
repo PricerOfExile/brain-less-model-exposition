@@ -17,7 +17,7 @@ response_translator = None
 
 @app.on_event("startup")
 def load_model():
-    global model, transofm_json_input_to_list
+    global model, transofm_json_input_to_list, response_translator
 
     model_architecture_path = 'model_architecture.json'
     if os.path.exists(model_architecture_path):
@@ -77,7 +77,7 @@ async def predict(request: Request):
         print("Model not loaded yet")
 
     if response_translator is not None:
-        return {"prediction": response_translator(result) if result is not None else "Model not loaded yet"}
+        return {"prediction": response_translator(*result) if result is not None else "Model not loaded yet"}
     else:
         print("Translator function not loaded yet")
         return {"prediction": result if result is not None else "Model not loaded yet"}

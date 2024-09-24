@@ -3,3 +3,4 @@
 generic_pytorch_model/model.pth
 generic_pytorch_model/model_architecture.json
 generic_pytorch_model/transformer.py
+generic_pytorch_model/translator.py
