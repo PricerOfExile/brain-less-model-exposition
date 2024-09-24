@@ -13,6 +13,7 @@ app = FastAPI()
 
 model = None
 transofm_json_input_to_list = None
+response_translator = None
 
 @app.on_event("startup")
 def load_model():
@@ -42,10 +43,19 @@ def load_model():
     else:
         print(f"Transformer file not found at {transfomer_path}")
 
+    translator_path = 'translator.py'
+    if os.path.exists(translator_path):
+        translator_spec = importlib.util.spec_from_file_location("translator", translator_path)
+        translator_module = importlib.util.module_from_spec(translator_spec)
+        translator_spec.loader.exec_module(translator_module)
+        response_translator = translator_module.translate
+    else:
+        print(f"Translator file not found at {translator_path}")
+
 
 @app.post("/predict")
 async def predict(request: Request):
-    global model, transofm_json_input_to_list
+    global model, transofm_json_input_to_list, response_translator
 
     data = await request.json()
     result = None
@@ -66,8 +76,11 @@ async def predict(request: Request):
     else:
         print("Model not loaded yet")
 
-    return {"prediction": result if result is not None else "Model not loaded yet"}
-
+    if response_translator is not None:
+        return {"prediction": response_translator(result) if result is not None else "Model not loaded yet"}
+    else:
+        print("Translator function not loaded yet")
+        return {"prediction": result if result is not None else "Model not loaded yet"}
 
 if __name__ == "__main__":
     import uvicorn
