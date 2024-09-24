@@ -38,7 +38,7 @@ def load_model():
         spec = importlib.util.spec_from_file_location("transformer", transfomer_path)
         transfomer_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(transfomer_module)
-        transfomer_json_input_to_list = transfomer_module.transform
+        transofm_json_input_to_list = transfomer_module.transform
     else:
         print(f"Transformer file not found at {transfomer_path}")
 
@@ -54,8 +54,8 @@ async def predict(request: Request):
     output = None
 
     if transofm_json_input_to_list is not None:
-        input_list = transfomer_json_input_to_list(data)
-        input_tensor = torch.tensor(input_list, dtype=torch.float32)
+        input_list = transofm_json_input_to_list(data)
+        input_tensor = torch.tensor(input_list, dtype=torch.float32).view(1, -1)
     else:
         print("Transformer function not loaded yet")
 
